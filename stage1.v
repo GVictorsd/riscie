@@ -8,9 +8,42 @@
 *
 * **************************************************************/
 
-module pc(
+//TODO: `include instruction memory...
+
+module stage1(
+	// branch address if branch taken
 	input [31:0] branchAddr,
-	input clk, pcSrc, reset,
+	// clock, reset, control for next pc source(whether branch)
+	input clk, reset, pcSrc,
+	// pcWrite, ifidWrite for stalls
+	input pcWrite, ifidWrite,
+
+	// output (next instruction)
+	output reg [31:0] ifidINST,ifidPc
+);
+
+	wire[31:0] nextAddr, data;
+
+	PC pc(branchAddr, clk, pcSrc, pcWrite, reset, nextAddr);
+
+//TODO:	INSTMEM instMem(nextAddr, data);
+
+	always@(posedge clk)
+	begin
+		ifidPc <= nextAddr;
+		if(ifidWrite)
+			ifidINST <= ifidINST;
+		else
+			ifidINST <= data;
+	end
+
+endmodule
+
+
+
+module PC(
+	input [31:0] branchAddr,
+	input clk, pcSrc, pcwrite, reset,
 	output [31:0] addrOut
 );
 
@@ -34,6 +67,8 @@ module pc(
 	begin
 		if(reset)
 			store <= 32'b0;
+		else if(pcwrite)
+			store <= store;
 		else if(pcSrc)
 			store <= branchAddr;
 		else if(!pcSrc)
