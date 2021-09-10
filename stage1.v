@@ -8,26 +8,22 @@
 *
 * **************************************************************/
 
-//TODO: `include instruction memory...
+`include "src1/instMem.v"
 `include "src1/pc.v"
 
 module stage1(
-	// branch address if branch taken
-	input [31:0] branchAddr,
-	// clock, reset, control for next pc source(whether branch)
-	input clk, reset, pcSrc,
-	// pcWrite, ifidWrite for stalls
-	input pcWrite, ifidWrite,
+	input [31:0] branchAddr,  // branch address if branch taken
+	input clk, reset, pcSrc,  // clock, reset, control for next pc source(whether branch)
+	input pcWrite, ifidWrite,  // pcWrite, ifidWrite for stalls
 
-	// output (next instruction)
-	output reg [31:0] ifidINST,ifidPc
+	output reg [31:0] ifidINST, ifidPc  // next instruction, next pc value
 );
 
 	wire[31:0] nextAddr, data;
 
 	PC pc(branchAddr, clk, pcSrc, pcWrite, reset, nextAddr);
 
-//TODO:	INSTMEM instMem(nextAddr, data);
+	instMemory instmem (nextAddr, data);
 
 	always@(posedge clk)
 	begin
@@ -39,4 +35,3 @@ module stage1(
 	end
 
 endmodule
-

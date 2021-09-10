@@ -17,26 +17,39 @@ module stage3(
 	input [6:0] idexFunc7,
 	input [2:0] idexFunc3,
 	input [63:0] idexExpandInst,
+
+	// control signals from previous stage
+	input [2:0] idexExCtrl,   // EX stage signals...(stage-3)
+	input [2:0] idexMemCtrl,  // MEM signals
+	input [1:0] idexWbCtrl,   // WB signals
+
+
 	input clk,
+	// signals from writeback stage(for forwarding Unit)
+	input memwbWb,       //writeback??
+	input [4:0] memwbRd, // writeback register
+	input [31:0] wbData, // write back data 
 
-	//TODO: control signals
-	input AluSrc,
-	input [1:0] AluOp,
-
-	input memwbWb,
-	input [4:0] memwbRd,
-	input [31:0] wbData, // write back data from wb stage mux
-
-	output reg [4:0] exmemRd,
+	output reg [4:0] exmemRd,  // forward writeback register
 	output reg [31:0] exmemAlu, exmemReg2,
 	output reg exmemZero,
 
-	output reg exmemWb //TODO: part of control line
+	// output reg exmemWb //TODO: part of control line
+
+	// forward control signals...
+	output reg [2:0] exmemMemCtrl,
+	output reg [1:0] exmemWbCtrl
 );
+
+	// destructure control signals for this stage
+	wire AluSrc;
+	wire AluOp;
+	assign AluSrc = idexExCtrl[2];
+	assign AluOp = idexExCtrl[1:0];
 
 	wire [1:0] forwardA, forwardB;
 	FORWARDUNIT forwardUnit(idexExpandInst[19:15], idexExpandInst[24:20],
-		exmemRd, memwbRd, exmemWb, memwbWb, forwardA, forwardB);
+		exmemRd, memwbRd, exmemWbCtrl[0], memwbWb, forwardA, forwardB);
 
 	wire[31:0] AluinA, AluinB;
 
@@ -60,6 +73,10 @@ module stage3(
 		exmemAlu <= AluResult;
 		exmemReg2 <= AluinB;
 		exmemZero <= zero;
+
+		// forward control lines
+		idexMemCtrl <= exmemMemCtrl;
+		idexWbCtrl <= exmemWbCtrl;
 	end
 
 endmodule
@@ -83,5 +100,3 @@ endmodule
 //		$dumpvars(0,DUT);
 //	end
 //	endmodule
-
-
