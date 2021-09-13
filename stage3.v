@@ -10,6 +10,8 @@
 `include "src3/aluControl.v"
 `include "src3/forwardUnit.v"
 
+//TODO: determine branch address and output it...
+
 module stage3(
 	input [31:0] idexPc,
 	input [31:0] idexData1, idexData2,
@@ -43,7 +45,7 @@ module stage3(
 
 	// destructure control signals for this stage
 	wire AluSrc;
-	wire AluOp;
+	wire [1:0] AluOp;
 	assign AluSrc = idexExCtrl[2];
 	assign AluOp = idexExCtrl[1:0];
 
@@ -65,6 +67,7 @@ module stage3(
 	
 	wire [31:0] AluResult;
 	wire zero;
+
 	ALUCONTROL AluControl(AluinA, AluinB, idexExpandInst, AluSrc, idexFunc7, idexFunc3, AluOp, AluResult, zero);
 
 	always@(posedge clk)
@@ -75,8 +78,8 @@ module stage3(
 		exmemZero <= zero;
 
 		// forward control lines
-		idexMemCtrl <= exmemMemCtrl;
-		idexWbCtrl <= exmemWbCtrl;
+		exmemMemCtrl<= idexMemCtrl;
+		exmemWbCtrl<= idexWbCtrl;
 	end
 
 endmodule

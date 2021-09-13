@@ -32,9 +32,9 @@ module stage2(
 	output reg [63:0] idexExpandInst,
 
 	// CONTROL SIGNALS TO ID/EX PIPELINE REGISTER
-	reg [2:0] idexExCtrl,   // EX stage signals...(stage-3)
-	reg [2:0] idexMemCtrl,  // MEM signals
-	reg [1:0] idexWbCtrl,   // WB signals
+	output reg [2:0] idexExCtrl,   // EX stage signals...(stage-3)
+	output reg [2:0] idexMemCtrl,  // MEM signals
+	output reg [1:0] idexWbCtrl   // WB signals
 );
 
 

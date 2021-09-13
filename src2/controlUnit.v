@@ -11,7 +11,7 @@ module controlUnit(
     output[2:0] memCtrl,
 
     // for WriteBack Stage {MemtoReg(for Mux select), regwrite(writeback enable)}
-    output[1:0] wbCtrl;
+    output[1:0] wbCtrl
 );
     // EX stage(stage-3)
     reg AluSrc;

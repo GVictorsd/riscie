@@ -1,5 +1,4 @@
 
-`include "alu.v"
 
 module ALUCONTROL(
 	input[31:0] inReg1, inReg2, imm,
@@ -40,3 +39,4 @@ module ALUCONTROL(
 		4'hz;
 
 endmodule
+

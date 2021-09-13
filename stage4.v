@@ -27,7 +27,7 @@ module stage4 (
 	// branch signal back to IF stage
 	output reg branch,
 
-	// TODO: forward writeback register to next stage
+
 	output reg [4:0] memwbRd,  // forward writeback register
 	output reg [1:0] memwbWbCtrl  // forward control signals
 
